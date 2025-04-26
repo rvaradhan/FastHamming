@@ -1,0 +1,13 @@
+Package: FastHamming
+Title: Fast Computation of Pairwise Hamming Distances
+Type: Package
+Version: 1.1
+Depends: R (>= 4.0.0)
+Authors@R: 
+    person(given="Ravi", family="Varadhan", email="ravi.varadhan@jhu.edu", role = c("aut", "cre"))
+Description: Pairwise Hamming distances are computed between the rows of a binary (0/1) matrix using highly optimized 'C' code. The input is an integer matrix where each row represents a binary feature vector and returns a symmetric integer matrix of pairwise distances. Internally, rows are bit-packed into 64-bit words for fast XOR-based comparisons, with hardware-accelerated popcount operations to count differences. 'OpenMP' parallelization ensures efficient performance for large matrices. 
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+SystemRequirements: C compiler (C99), OpenMP
