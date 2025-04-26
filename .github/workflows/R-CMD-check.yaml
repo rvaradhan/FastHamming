@@ -1,0 +1,42 @@
+name: R CMD check (Fedora + clang)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  R-CMD-check:
+    # we still run on ubuntu (for Actions infra), but spin up the Fedora-clang container:
+    runs-on: ubuntu-latest
+    container:
+      image: rhub/fedora-clang-devel
+
+    steps:
+      # 1) Grab your code
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      # 2) Install system R (the container may already have R-devel, 
+      #    but this ensures you’re on CRAN’s R or R-devel)
+      - name: Install R
+        run: |
+          sudo dnf install -y R
+
+      # 3) (Optional) Install extra Fedora system libraries here, e.g.:
+      #    sudo dnf install -y libxml2-devel openssl-devel
+
+      # 4) Install R-level dependencies
+      - name: Install R package dependencies
+        run: |
+          Rscript -e 'install.packages(c("remotes","devtools"), repos="https://cloud.r-project.org")'
+          # installs Depends, Imports, (optionally Suggests if you like)
+          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
+
+      # 5) Run the CRAN‐style check
+      - name: R CMD check
+        run: |
+          R CMD check --no-manual --as-cran .
